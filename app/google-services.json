@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "987529619549",
+    "project_id": "mangaapp-406121",
+    "storage_bucket": "mangaapp-406121.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987529619549:android:4bc1f2e5522e1e22e645b4",
+        "android_client_info": {
+          "package_name": "com.mduran.ninjareadertres"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR6ydjK2bC2RA49L5-X-J1_6im5ZD7k9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,9 +1,11 @@
 package com.mduran.ninjareadertres;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -11,12 +13,20 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class LoginActivity extends AppCompatActivity {
     // Variables
     private EditText txtUsuario;
     private EditText txtPass;
     private CheckBox chkEdad;
     private ProgressBar barLoading;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,48 +34,44 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         barLoading = findViewById(R.id.barLogin);
         barLoading.setVisibility(View.INVISIBLE);
-
-    }
-
-    public void onButtonClicked(View view) {
-        txtUsuario = findViewById(R.id.txtUsuario);
+        FirebaseApp.initializeApp(this);
+        txtUsuario = findViewById(R.id.txtMail);
         txtPass = findViewById(R.id.txtPass);
         chkEdad = findViewById(R.id.chkEdad);
-
-        // Traigo los datos del otro intent
-        Bundle datos = LoginActivity.this.getIntent().getExtras();
-        String user = datos.getString("username");
-        String pass = datos.getString("pass");
-
-        if(txtUsuario.getText().toString().equals(user) && txtPass.getText().toString().equals(pass) && chkEdad.isChecked() ){
-            try {
-                // Sleep for 200 milliseconds.
-                Thread.sleep(600);
-                barLoading.setVisibility(View.VISIBLE);
-                Intent intent = new Intent (this, MainActivity.class);
-                startActivity(intent);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }else{
-            String error = "Usuario y/o clave invalid@";
-            System.out.println(user);
-            System.out.println(pass);
-            Toast toast = Toast.makeText(this, error, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.START, 90, 0);
-            toast.show();
-            if(!chkEdad.isChecked()){
-                String errorEdad = "Debes ser mayor de doce años.";
-                Toast toastEdad = Toast.makeText(this, errorEdad, Toast.LENGTH_SHORT);
-                toastEdad.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.START, 90, 0);
-                toastEdad.show();
-            }
-        }
-
+        mAuth = FirebaseAuth.getInstance();
     }
 
     public void onButtonClickedReg(View view) {
-        Intent intent = new Intent (this, RegisterActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
+    }
+
+    public void login(View view) {
+        String email = txtUsuario.getText().toString();
+        String password = txtPass.getText().toString();
+
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Inicio de sesión exitoso
+                            Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent (LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            // Puedes redirigir a la siguiente actividad aquí
+                        } else {
+                            // Si el inicio de sesión falla, muestra un mensaje al usuario.
+                            Toast.makeText(LoginActivity.this, "Inicio de sesión fallido", Toast.LENGTH_SHORT).show();
+                            // Asegúrate de que los EditText estén inicializados correctamente
+                            if (email == null || password == null) {
+                                // Maneja el error, por ejemplo, mostrando un mensaje de log o una alerta
+                                Log.e("LoginActivity", "Error: EditText no inicializado correctamente");
+                                return;
+                            }
+                        }
+                    }
+                });
     }
 }

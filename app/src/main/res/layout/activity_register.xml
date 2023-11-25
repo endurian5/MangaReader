@@ -51,15 +51,15 @@
                 android:textSize="40dp" />
 
             <EditText
-                android:id="@+id/txtUsuario"
+                android:id="@+id/txtCorreo"
                 style="@style/Widget.AppCompat.AutoCompleteTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:ems="10"
+                android:ems="12"
                 android:fontFamily="sans-serif"
-                android:hint="Pablo Jimenez"
-                android:inputType="text"
+                android:hint="Pablo@email.com"
+                android:inputType="textEmailAddress"
                 android:singleLine="true"
                 android:textAlignment="center"
                 android:textColor="#000000"
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:fontFamily="@font/jolly_lodger"
-                android:onClick="onButtonClicked"
+                android:onClick="registrar"
                 android:text="Registrarse"
                 android:textAllCaps="true"
                 android:textColorHighlight="#753636"
